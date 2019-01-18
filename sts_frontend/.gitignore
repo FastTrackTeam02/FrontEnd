@@ -1,0 +1,11 @@
+/.project
+
+/node_modules/
+/deliver/
+
+/dist/
+
+/dist/styleguide/*
+!/dist/styleguide/homepage.md
+
+/dist/maps/*

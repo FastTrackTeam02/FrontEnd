@@ -1,0 +1,5 @@
+
+
+function nameee() {
+    alert('a');
+}
