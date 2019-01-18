@@ -1,6 +1,7 @@
 // This is INCORRECT
 const { series, parallel,src, dest } = require('gulp');
 const gulp = require('gulp');
+const watch = require('gulp-watch');
 const sass = require('gulp-sass');
 const kss = require('kss');
 const minify = require('gulp-minify');
@@ -14,12 +15,9 @@ const uglify = require('gulp-uglify');
   
 
   gulp.task('sass', function () {
-    return gulp.src('src/assets/**/style.scss')
+    return gulp.src('src/assets/**/*.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(gulp.dest('dist/assets/'));
-  });
-  gulp.task('sass:watch', function () {
-    gulp.watch('src/assets/**/*.scss', ['sass']);
   });
 
   gulp.task('js', () => {
@@ -28,8 +26,10 @@ const uglify = require('gulp-uglify');
         .pipe(minify())
         .pipe(gulp.dest('dist/assets/'));
   });
-  gulp.task('js:watch', function () {
-    gulp.watch('src/assets/*/*/*.js', ['js']);
+
+  gulp.task('img', () => {
+    return gulp.src(['src/assets/common/img/*.*'])
+        .pipe(gulp.dest('dist/assets/common/img/'));
   });
 
   gulp.task('html', () => {
@@ -38,8 +38,12 @@ const uglify = require('gulp-uglify');
         // .pipe(minify())
         .pipe(gulp.dest('dist/assets/'));
   });
-  gulp.task('html:watch', function () {
-    gulp.watch('src/assets/**/*.html', ['html']);
+
+  gulp.task('watch', function() {
+    gulp.watch('src/assets/**/*.scss', gulp.series('sass'));
+    gulp.watch('src/assets/*/*/*.js', gulp.series('js'));
+    gulp.watch('src/assets/common/img/*.*', gulp.series('img'));
+    gulp.watch('src/assets/**/*.html', gulp.series('html'));
   });
 
   ////STYLEGUIDE
@@ -68,5 +72,6 @@ const uglify = require('gulp-uglify');
   });
   
   exports.builddev = series(clean, parallel("styleguide"));
-  exports.build = series(clean, parallel("sass", "js", "html", "styleguide"));
+  exports.build = series(clean, parallel("sass", "js", "img", "html", "styleguide"), "watch");
+
   //exports.default = build;
